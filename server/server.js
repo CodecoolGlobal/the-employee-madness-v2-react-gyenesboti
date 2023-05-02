@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const EmployeeModel = require("./db/employee.model");
+const Equipment = require("./db/equipment");
+
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -17,6 +19,7 @@ app.get("/api/employees/", async (req, res) => {
   const employees = await EmployeeModel.find().sort({ created: "desc" });
   return res.json(employees);
 });
+
 
 app.get("/api/employees/:id", async (req, res) => {
   const employee = await EmployeeModel.findById(req.params.id);
@@ -65,6 +68,35 @@ const main = async () => {
     console.log("Try /api/employees route right now");
   });
 };
+
+app.get("/api/equipments", async (req,res) => {
+  const data = await Equipment.find({});
+  res.json(data)
+})
+
+app.get("/api/equipments/:id", async (req,res) => {
+  const equipment = await Equipment.findById(req.params.id);
+  res.json(equipment);
+})
+
+app.patch("/api/equipments/:id", async (req,res, next) => {
+  try {
+    const equipment = await Equipment.findOneAndUpdate({_id: req.params.id}, {$set:{...req.body}}, {new:true});
+    return res.json(equipment);
+  } catch (err) {
+    return next(err)
+  }
+})
+
+app.delete("/api/equipments/:id", async (req,res,next) => {
+  try {
+    const equipment = await Equipment.findById(req.params.id);
+    const deleted = await equipment.delete();
+    return res.json(deleted);
+  } catch (err) {
+    return next(err);
+  }
+})
 
 main().catch((err) => {
   console.error(err);
