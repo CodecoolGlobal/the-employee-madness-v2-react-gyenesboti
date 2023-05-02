@@ -20,7 +20,7 @@ const AddTool = () => {
             },
             body: JSON.stringify(newTool)
         });
-        navigate("/");
+        navigate("/tools");
     }
 
     return (

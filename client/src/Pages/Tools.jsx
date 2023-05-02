@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import ToolsTable from "../Components/ToolsTable";
+import { Link } from "react-router-dom";
 
 
 const Tools = () => {
     const [tools, setTools] = useState([]);
+    const [filter, setFilter] = useState("");
 
     useEffect(() => {
         fetch('/api/tools')
@@ -12,12 +13,35 @@ const Tools = () => {
     }, [])
 
 
-    const handleFilter = (e) => {
-        setTools(tools.filter(tool => tool.name.toLowerCase().startsWith(e.target.value.toLowerCase())));
-    }
+    const filtered = tools.filter(tool => tool.name.toLowerCase().includes(filter.toLowerCase()))
 
     return (
-        <ToolsTable tools={tools} handleFilter={handleFilter}/>
+        <>
+        <input placeholder="filter by name" onChange={(e) => setFilter(e.target.value)}></input>
+        <Link to="/add-tool">
+        <button>Create a new tool</button>
+        </Link>
+        <table>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                    <td>Weight</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                {filtered.map((tool,index) => 
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{tool.name}</td>
+                        <td>{tool.weight}</td>
+                        <td></td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
+        </>
     )
 }
 
