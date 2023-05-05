@@ -11,6 +11,10 @@ const EmployeeSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  currentSalary: Number,
+  desiredSalary: Number,
+  startingDate: Date,
+  favouriteColor: "",
 });
 
 module.exports = mongoose.model("Employee", EmployeeSchema);
