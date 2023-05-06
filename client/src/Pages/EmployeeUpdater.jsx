@@ -25,6 +25,7 @@ const EmployeeUpdater = () => {
   const [employee, setEmployee] = useState(null);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [employeeLoading, setEmployeeLoading] = useState(true);
+  const [positions, setPositions] = useState([]);
 
   useEffect(() => {
     setEmployeeLoading(true);
@@ -34,6 +35,12 @@ const EmployeeUpdater = () => {
         setEmployeeLoading(false);
       });
   }, [id]);
+
+  useEffect(() => {
+    fetch("/api/positions")
+    .then(res => res.json())
+    .then(data => setPositions(data));
+  }, [])
 
   const handleUpdateEmployee = (employee) => {
     setUpdateLoading(true);
@@ -50,6 +57,7 @@ const EmployeeUpdater = () => {
 
   return (
     <EmployeeForm
+      positions={positions}
       employee={employee}
       onSave={handleUpdateEmployee}
       disabled={updateLoading}

@@ -1,4 +1,4 @@
-const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
+const EmployeeForm = ({ onSave, disabled, employee, onCancel, positions }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -9,7 +9,7 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       acc[k] = v;
       return acc;
     }, {});
-
+    
     return onSave(employee);
   };
 
@@ -39,11 +39,14 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
 
       <div className="control">
         <label htmlFor="position">Position:</label>
-        <input
+        <select
           defaultValue={employee ? employee.position : null}
           name="position"
-          id="position"
-        />
+          id="position">
+            {positions.map((position,index) => 
+              <option key={index}>{position.name}</option>)}
+        </select>
+      
       </div>
 
       <div className="buttons">

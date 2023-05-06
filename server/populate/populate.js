@@ -7,6 +7,8 @@ const names = require("./names.json");
 const levels = require("./levels.json");
 const positions = require("./positions.json");
 const EmployeeModel = require("../db/employee.model");
+const Positions = require("../db/positions");
+const positionDocuments = require("./positionDocuments.json");
 
 const mongoUrl = process.env.MONGO_URL;
 
@@ -30,10 +32,16 @@ const populateEmployees = async () => {
   console.log("Employees created");
 };
 
+const populatePositions = () => {
+  positionDocuments.map(document => Positions.create(document))
+}
+
 const main = async () => {
   await mongoose.connect(mongoUrl);
 
   await populateEmployees();
+
+  populatePositions();
 
   await mongoose.disconnect();
 };
