@@ -47,7 +47,7 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       </div>
 
       <div className="control">
-        <label htmlFor="experience">Position:</label>
+        <label htmlFor="experience">Experience:</label>
         <input
           disabled={employee.level === "Junior" ? true : false}
           type="Number"

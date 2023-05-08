@@ -66,45 +66,49 @@ const main = async () => {
   });
 };
 
-app.get("/api/years-of-experience", async (req,res,next) => {
-  try {
-    console.log(req.query);
-    const employees = await EmployeeModel.find({experience: { $gte: req.query.exp}}).sort({name: req.query.type})
-    return res.json(employees)
-  } catch (error) {
-    next(error)
+// app.get("/api/years-of-experience", async (req,res,next) => {
+//   try {
+//     console.log(req.query);
+//     const employees = await EmployeeModel.find({experience: { $gte: req.query.exp}}).sort({name: req.query.type})
+//     return res.json(employees)
+//   } catch (error) {
+//     next(error)
+//   }
+// })
+
+app.get("/api/years-of-experience/:experience", async (req,res, next) => {
+  const experience = req.params.experience;
+  if (experience < 0 || isNaN(experience)) {
+    res.status(404).send()
+  } else {
+    try {
+      const employees = await EmployeeModel.find({experience: { $gte: experience }})
+      return res.json(employees)
+    } catch (error) {
+      next(error)
+    }
   }
 })
 
-// app.get("/api/years-of-experience", async (req,res, next) => {
-//   console.log(req.query);
-//   // try {
-//   //   const employees = await EmployeeModel.find({experience: { $gte: experience }})
-//   //   return res.json(employees)
-//   // } catch (error) {
-//   //   next(error)
-//   // }
-// })
+app.get("/api/years-of-experience/:experience/asc", async (req,res,next) => {
+  const experience = req.params.experience;
+    try {
+      const employees = await EmployeeModel.find({experience: { $gte: experience }}).sort({name: "asc"});
+      return res.json(employees)
+    } catch (error) {
+      next(error)
+  } 
+})
 
-// app.get("/api/years-of-experience/:experience/asc", async (req,res,next) => {
-//   const experience = req.params.experience
-//   try {
-//     const employees = await EmployeeModel.find({experience: { $gte: experience }}).sort({name: "asc"});
-//     return res.json(employees)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
-
-// app.get("/api/years-of-experience/:experience/desc", async (req,res,next) => {
-//   const experience = req.params.experience
-//   try {
-//     const employees = await EmployeeModel.find({experience: { $gte: experience }}).sort({name: "desc"});
-//     return res.json(employees)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+app.get("/api/years-of-experience/:experience/desc", async (req,res,next) => {
+  const experience = req.params.experience;
+    try {
+      const employees = await EmployeeModel.find({experience: { $gte: experience }}).sort({name: "desc"});
+      return res.json(employees)
+    } catch (error) {
+      next(error)
+    }
+})
 
 main().catch((err) => {
   console.error(err);

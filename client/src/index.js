@@ -9,6 +9,7 @@ import EmployeeList from "./Pages/EmployeeList";
 import EmployeeCreator from "./Pages/EmployeeCreator";
 import EmployeeUpdater from "./Pages/EmployeeUpdater";
 import Experience from "./Pages/Experience";
+import Error from "./Pages/Error";
 
 import "./index.css";
 import TableTest from "./Pages/TableTest";
@@ -41,8 +42,12 @@ const router = createBrowserRouter([
         element: <FormTest />,
       },
       {
-        path: "/years-of-experience",
+        path: "/years-of-experience/:experience",
         element: <Experience />
+      },
+      {
+        path: "/error",
+        element: <Error />
       }
     ],
   },

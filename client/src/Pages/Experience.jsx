@@ -1,25 +1,31 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 
 const deleteEmployee = (id) => {
     return fetch(`/api/employees/${id}`, { method: "DELETE" }).then((res) =>
       res.json()
     );
-  };
+};
+
 
 const Experience = () => {
     const [employees, setEmployees] = useState([]);
     const [count, setCount] = useState(false);
-    const [url, setUrl] = useState(``)
-
-    const [searchParams, setSearchParams] = useSearchParams()
-    const exp = searchParams.get("exp")
-    console.log(exp);
+    const {experience} = useParams();
+    const navigate = useNavigate();
+    // const [url, setUrl] = useState(``)
+    // const [searchParams, setSearchParams] = useSearchParams()
+    // const exp = searchParams.get("exp")
+    // console.log(exp);
 
     useEffect(() => {
-        fetch(`/api/years-of-experience`)
-        .then(res => res.json())
+        fetch(`/api/years-of-experience/${experience}`)
+        .then(res => { if (res.status === 404) {
+            navigate("/error");
+        } else {
+            return res.json()
+        }})   
         .then(data => setEmployees(data))
     }, [])
 
@@ -33,11 +39,15 @@ const Experience = () => {
 
     const handleSort = () => {
         setCount(!count);
-        setUrl(`/api/years-of-experience?exp=${exp}&type=${count ? "asc" : "desc"}`);
-        console.log(url);
-        fetch(url)
-        .then(res => res.json())
-        .then(data => setEmployees(data))   
+        if (count) {
+            fetch(`/api/years-of-experience/${experience}/desc`)
+            .then(res => res.json())
+            .then(data => setEmployees(data))
+        } else {
+            fetch(`/api/years-of-experience/${experience}/asc`)
+            .then(res => res.json())
+            .then(data => setEmployees(data))
+        }
     }
 
     return (
