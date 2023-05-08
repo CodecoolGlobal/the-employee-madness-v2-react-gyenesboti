@@ -77,7 +77,7 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       </div>
 
       <div className="control">
-        <label htmlFor="favouriteColor">Favourite color:</label>
+        <label htmlFor="favouriteColor">Position:</label>
         <input
           type="color"
           defaultValue={employee ? employee.favouriteColor : null}
@@ -85,8 +85,6 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
           id="favouriteColor"
         />
       </div>
-
-
 
       <div className="buttons">
         <button type="submit" disabled={disabled}>

@@ -27,8 +27,8 @@ const populateEmployees = async () => {
     position: pick(positions),
     currentSalary: pick(salaries),
     desiredSalary: 2000,
-    startingDate: "",
-    favouriteColor: "",
+    startingDate: null,
+    favouriteColor: null,
   }));
 
   await EmployeeModel.create(...employees);
