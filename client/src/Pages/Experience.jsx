@@ -14,10 +14,6 @@ const Experience = () => {
     const [count, setCount] = useState(false);
     const {experience} = useParams();
     const navigate = useNavigate();
-    // const [url, setUrl] = useState(``)
-    // const [searchParams, setSearchParams] = useSearchParams()
-    // const exp = searchParams.get("exp")
-    // console.log(exp);
 
     useEffect(() => {
         fetch(`/api/years-of-experience/${experience}`)
