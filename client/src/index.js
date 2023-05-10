@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         element: <FormTest />,
       },
       {
-        path: "/years-of-experience/:experience",
+        path: "/years-of-experience",
         element: <Experience />
       },
       {

@@ -49,8 +49,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       <div className="control">
         <label htmlFor="experience">Experience:</label>
         <input
+          type="number"
           disabled={employee.level === "Junior" ? true : false}
-          type="Number"
           defaultValue={employee ? employee.experience : null}
           name="experience"
           id="experience"

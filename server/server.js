@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const EmployeeModel = require("./db/employee.model");
+const employeeModel = require("./db/employee.model");
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -57,6 +58,32 @@ app.delete("/api/employees/:id", async (req, res, next) => {
   }
 });
 
+app.get("/api/years-of-experience", async (req, res, next) => {
+  const year = req.query.year;
+  if (year < 0 || isNaN(year)) {
+    res.status(404).send()
+  } else {
+    try {
+      const employees = await employeeModel.find({ experience: { $gte: year } })
+      return res.json(employees);
+    } catch (error) {
+      next(error)
+    }
+  }
+})
+
+app.get("/api/years-of-experience/:sort", async (req, res, next) => {
+  const year = req.query.year;
+  const sort = req.params.sort;
+  try {
+    const employees = await employeeModel.find({ experience: { $gte: year } }).sort({name: sort})
+    return res.json(employees);
+  } catch (error) {
+    next(error)
+  }
+}
+)
+
 const main = async () => {
   await mongoose.connect(MONGO_URL);
 
@@ -66,39 +93,6 @@ const main = async () => {
   });
 };
 
-app.get("/api/years-of-experience/:experience", async (req,res, next) => {
-  const experience = req.params.experience;
-  if (experience < 0 || isNaN(experience)) {
-    res.status(404).send()
-  } else {
-    try {
-      const employees = await EmployeeModel.find({experience: { $gte: experience }})
-      return res.json(employees)
-    } catch (error) {
-      next(error)
-    }
-  }
-})
-
-app.get("/api/years-of-experience/:experience/asc", async (req,res,next) => {
-  const experience = req.params.experience;
-    try {
-      const employees = await EmployeeModel.find({experience: { $gte: experience }}).sort({name: "asc"});
-      return res.json(employees)
-    } catch (error) {
-      next(error)
-  } 
-})
-
-app.get("/api/years-of-experience/:experience/desc", async (req,res,next) => {
-  const experience = req.params.experience;
-    try {
-      const employees = await EmployeeModel.find({experience: { $gte: experience }}).sort({name: "desc"});
-      return res.json(employees)
-    } catch (error) {
-      next(error)
-    }
-})
 
 main().catch((err) => {
   console.error(err);

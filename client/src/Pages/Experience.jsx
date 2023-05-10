@@ -1,84 +1,83 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
+const sortEmployees = (year, navigate, sortBy) => {
+    return fetch(`/api/years-of-experience/${sortBy}?year=${year}`)
+        .then(res => { 
+            if (res.status === 404) {
+                navigate("/error")
+            } else {
+                return res.json()
+            } 
+    })    
+}
 
-const deleteEmployee = (id) => {
-    return fetch(`/api/employees/${id}`, { method: "DELETE" }).then((res) =>
-      res.json()
-    );
-};
-
+const fetchEmployees = (year, navigate) => {
+    return fetch(`/api/years-of-experience?year=${year}`)
+    .then(res => { 
+        if (res.status === 404) {
+            navigate("/error")
+        } else {
+            return res.json()
+        } 
+    })
+}
 
 const Experience = () => {
-    const [employees, setEmployees] = useState([]);
-    const [count, setCount] = useState(false);
-    const {experience} = useParams();
+    const [sort, setSort] = useState(false);
+    const [employees, setEmployees] = useState(null);
+    let [searchParams, setSearchParams] = useSearchParams();
+    const year = searchParams.get('year');
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`/api/years-of-experience/${experience}`)
-        .then(res => { if (res.status === 404) {
-            navigate("/error");
-        } else {
-            return res.json()
-        }})   
-        .then(data => setEmployees(data))
+        fetchEmployees(year,navigate)
+        .then(employees => setEmployees(employees))
     }, [])
 
-    const handleDelete = (id) => {
-        deleteEmployee(id);
-    
-        setEmployees((employees) => {
-          return employees.filter((employee) => employee._id !== id);
-        });
-    };
-
     const handleSort = () => {
-        setCount(!count);
-        if (count) {
-            fetch(`/api/years-of-experience/${experience}/desc`)
-            .then(res => res.json())
-            .then(data => setEmployees(data))
+        setSort(!sort);
+        if (sort) {
+            const sortBy = "desc"
+            sortEmployees(year,navigate,sortBy)
+            .then(employees => setEmployees(employees));
         } else {
-            fetch(`/api/years-of-experience/${experience}/asc`)
-            .then(res => res.json())
-            .then(data => setEmployees(data))
+            const sortBy = "asc"
+            sortEmployees(year,navigate,sortBy)
+            .then(employees => setEmployees(employees));
         }
     }
 
-    return (
-        <>
-        <table>
-            <thead>
-                <tr>
-                    <td></td>
-                    <td onClick={() => handleSort()}>Name</td>
-                    <td>Level</td>
-                    <td>Position</td>
-                    <td>Experience</td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                {employees.map((employee, index) => 
-                    <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{employee.name}</td>
-                        <td>{employee.level}</td>
-                        <td>{employee.position}</td>
-                        <td>{employee.experience}</td>
-                        <td>
-                            <Link to={`/update/${employee._id}`}>
-                                <button type="button">Update</button>
-                            </Link>
-                            <button type="button" onClick={() => handleDelete(employee._id)}>Delete</button>
-                        </td>
+    if (employees) {
+        return (
+            <>
+            <table>
+                <thead>
+                    <tr>
+                        <th onClick={handleSort}>Name</th>
+                        <th>Level</th>
+                        <th>Position</th>
+                        <th>Experience</th>
                     </tr>
-                )}
-            </tbody>
-        </table>
-        </>
-    )
+                </thead>
+                <tbody>
+                    {employees.map((employee) => (
+                        <tr key={employee._id}>
+                            <td>{employee.name}</td>
+                            <td>{employee.level}</td>
+                            <td>{employee.position}</td>
+                            <td>{employee.experience}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            </>
+        )
+    } else {
+        return (
+            <h2>Loading...</h2>
+        )
+    }
 }
 
-export default Experience
+export default Experience;
