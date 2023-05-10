@@ -15,7 +15,6 @@ const deleteEmployee = (id) => {
 const EmployeeList = () => {
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState(null);
-  const [filteredBy, setFilteredBy] = useState(0);
 
   const handleDelete = (id) => {
     deleteEmployee(id);
@@ -37,21 +36,9 @@ const EmployeeList = () => {
     return <Loading />;
   }
 
-  const filtered = employees.filter(employee => employee.height >= filteredBy)
-
-  const randomizeHeight = () => {
-    fetch("/api/randomHeights", {
-      method: "PATCH"
-    })
-    .then(res => res.json())
-    .then(data => setEmployees(data))
-  } 
-
   return (
   <>
-  <button onClick={randomizeHeight}>Randomize height</button>
-  <input type="number" placeholder="Filter by height" onChange={(e) => setFilteredBy(e.target.value)}></input>
-  <EmployeeTable employees={filtered} onDelete={handleDelete} />;
+  <EmployeeTable employees={employees} onDelete={handleDelete} />;
   </>  
   )
 };

@@ -66,19 +66,6 @@ const main = async () => {
   });
 };
 
-app.patch("/api/randomHeights", async (req,res,next) => {
-  const pick = (from) => from[Math.floor(Math.random() * (from.length - 0))];
-  const randomHeights = [140,145,150,155,160,165,170,175,180,185,190]
-  try {
-    const employees = await EmployeeModel.find({});
-    for (let i = 0; i <= employees.length; i++){
-      await EmployeeModel.findByIdAndUpdate(employees[i]._id, {height: pick(randomHeights)});
-    }
-    return res.json(employees)
-  } catch (error) {
-    next(error)
-  }
-})
 
 main().catch((err) => {
   console.error(err);
