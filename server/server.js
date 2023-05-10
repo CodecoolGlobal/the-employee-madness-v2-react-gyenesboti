@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const EmployeeModel = require("./db/employee.model");
+const Tool = require('./db/tool.model');
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -57,6 +58,25 @@ app.delete("/api/employees/:id", async (req, res, next) => {
   }
 });
 
+app.get("/api/tools", async (req,res,next) => {
+  const filter = req.query.name;
+  try {
+    const tools = await Tool.find({name: new RegExp(filter, "i")});
+    return res.json(tools);
+  } catch (error) {
+    next(error)
+  }
+})
+
+app.get("/api/tools/:id", async (req,res,next) => {
+  try {
+    const tool = await Tool.findById(req.params.id);
+    return res.json(tool);
+  } catch (error) {
+    next(error)
+  }
+})
+
 const main = async () => {
   await mongoose.connect(MONGO_URL);
 
@@ -66,19 +86,6 @@ const main = async () => {
   });
 };
 
-app.patch("/api/randomHeights", async (req,res,next) => {
-  const pick = (from) => from[Math.floor(Math.random() * (from.length - 0))];
-  const randomHeights = [140,145,150,155,160,165,170,175,180,185,190]
-  try {
-    const employees = await EmployeeModel.find({});
-    for (let i = 0; i <= employees.length; i++){
-      await EmployeeModel.findByIdAndUpdate(employees[i]._id, {height: pick(randomHeights)});
-    }
-    return res.json(employees)
-  } catch (error) {
-    next(error)
-  }
-})
 
 main().catch((err) => {
   console.error(err);
