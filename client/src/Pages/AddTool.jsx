@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AddTool = () => {
     const [name, setName] = useState("");
@@ -27,12 +27,12 @@ const AddTool = () => {
         <form onSubmit={handleSubmit}>
             <div className="control">
                 <label htmlFor="name">Name:</label>
-                <input type="text" name="name" id="name" defaultValue={name} onChange={(e) => setName(e.target.value)}></input>
+                <input type="text" name="name" id="name" value={name} onChange={(e) => setName(e.target.value)}></input>
             </div>
 
             <div className="control">
                 <label htmlFor="weight">Weight:</label>
-                <input type="number" step="0.01" name="weight" id="weight" defaultValue={weight} onChange={(e) => setWeight(e.target.value)}></input>
+                <input type="number" step="0.01" name="weight" id="weight" value={weight} onChange={(e) => setWeight(e.target.value)}></input>
             </div>
 
             <button type="submit">Add tool</button>
