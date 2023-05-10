@@ -7,6 +7,8 @@ const names = require("./names.json");
 const levels = require("./levels.json");
 const positions = require("./positions.json");
 const EmployeeModel = require("../db/employee.model");
+const practice = require('./practice.json');
+const Position = require('../db/positions.model') 
 
 const mongoUrl = process.env.MONGO_URL;
 
@@ -23,15 +25,20 @@ const populateEmployees = async () => {
   const employees = names.map((name) => ({
     name,
     level: pick(levels),
-    position: pick(positions),
+    position: pick(practice).name,
   }));
 
   await EmployeeModel.create(...employees);
   console.log("Employees created");
 };
 
+const populatePositions = async () => {
+  await Position.create(...practice)
+}
+
 const main = async () => {
   await mongoose.connect(mongoUrl);
+  await populatePositions();
 
   await populateEmployees();
 
